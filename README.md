@@ -2,6 +2,9 @@
 
 This project is the owner-only app for Gongbab. Owners can check daily meal status, company meal details, and monthly settlement through this app.
 
+## Dependencies
+- go_router: ^15.1.2 (for navigation)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
