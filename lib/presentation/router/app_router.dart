@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
+import 'package:gongbab_owner/presentation/screens/login/login_screen.dart';
 
 part 'app_routes.dart';
 
@@ -10,8 +11,7 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.login,
         builder: (BuildContext context, GoRouterState state) {
-          // TODO: Implement LoginScreen
-          return const Text('Login Screen'); // Placeholder
+          return const LoginScreen();
         },
       ),
       // Add other routes here
