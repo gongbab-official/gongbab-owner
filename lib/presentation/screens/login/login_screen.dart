@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _onClear() {
+  void _onBackspace() {
     setState(() {
       if (currentIndex > 0) {
         currentIndex--;
@@ -47,6 +47,14 @@ class _LoginScreenState extends State<LoginScreen> {
           isNumberMode = true;
         }
       }
+    });
+  } // 여기에 닫는 중괄호 추가
+
+  void _onClearAll() {
+    setState(() {
+      inputs = [null, null, null, null, null];
+      currentIndex = 0;
+      isNumberMode = true; // Reset to number mode
     });
   }
 
@@ -61,6 +69,93 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Navigate to next screen or show error
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F172A),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              // Title
+              const Text(
+                '관리자 로그인',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Subtitle
+              const Text(
+                '번호 4자리 + 알파벳 1자리',
+                style: TextStyle(
+                  color: Color(0xFF94A3B8),
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 60),
+              // Input dots
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  5,
+                      (index) =>
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: _buildInputDot(index),
+                      ),
+                ),
+              ),
+              const SizedBox(height: 60),
+              // Keypad
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E293B),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: isNumberMode
+                      ? _buildNumberKeypad()
+                      : _buildAlphabetKeypad(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Login button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: currentIndex == 5 ? _onLogin : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF3B82F6),
+                    disabledBackgroundColor: const Color(0xFF1E293B),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    '로그인',
+                    style: TextStyle(
+                      color: currentIndex == 5 ? Colors.white : const Color(
+                          0xFF64748B),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildInputDot(int index) {
@@ -373,7 +468,8 @@ class _LoginScreenState extends State<LoginScreen> {
         decoration: BoxDecoration(
           color: const Color(0xFF1E293B),
           border: Border.all(
-            color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFF2D3748),
+            color: isSelected ? const Color(0xFF3B82F6) : const Color(
+                0xFF2D3748),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -418,7 +514,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildClearButton() {
     return GestureDetector(
-      onTap: _onClear,
+      onTap: _onClearAll,
       child: Container(
         width: 100,
         height: 60,
@@ -442,7 +538,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildBackspaceButton() {
     return GestureDetector(
-      onTap: _onClear,
+      onTap: _onBackspace,
       child: Container(
         width: 100,
         height: 60,
@@ -455,91 +551,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Icons.backspace_outlined,
             color: Colors.white,
             size: 24,
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              // Title
-              const Text(
-                '관리자 로그인',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              // Subtitle
-              const Text(
-                '번호 4자리 + 알파벳 1자리',
-                style: TextStyle(
-                  color: Color(0xFF94A3B8),
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 60),
-              // Input dots
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  5,
-                      (index) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: _buildInputDot(index),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 60),
-              // Keypad
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E293B),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: isNumberMode
-                      ? _buildNumberKeypad()
-                      : _buildAlphabetKeypad(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Login button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: currentIndex == 5 ? _onLogin : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3B82F6),
-                    disabledBackgroundColor: const Color(0xFF1E293B),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    '로그인',
-                    style: TextStyle(
-                      color: currentIndex == 5 ? Colors.white : const Color(0xFF64748B),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ),
