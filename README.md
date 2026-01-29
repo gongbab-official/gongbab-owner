@@ -4,6 +4,7 @@ This project is the owner-only app for Gongbab. Owners can check daily meal stat
 
 ## Dependencies
 - go_router: ^15.1.2 (for navigation)
+- flutter_screenutil: ^5.9.3 (for responsive UI)
 
 ## Getting Started
 
