@@ -1,6 +1,6 @@
 # gongbab_owner
 
-for gongbab owner
+This project is the owner-only app for Gongbab. Owners can check daily meal status, company meal details, and monthly settlement through this app.
 
 ## Getting Started
 
