@@ -1,4 +1,5 @@
 
+import 'package:gongbab_owner/data/models/daily_dashboard_model.dart';
 import 'package:gongbab_owner/data/network/rest_api_client.dart';
 import 'package:injectable/injectable.dart';
 
@@ -12,7 +13,7 @@ class ApiService {
 
   ApiService(this._appApiClient);
 
-// ------------auth---------------------
+  // ------------auth---------------------
   Future<Result<LoginModel>> login({
     required String code,
     required String deviceType,
@@ -29,6 +30,20 @@ class ApiService {
       fromJson: LoginModel.fromJson,
     );
   }
-// ------------------------------------
+  // ------------------------------------
 
+  // ------------dashboard---------------------
+  Future<Result<DailyDashboardModel>> getDailyDashboard({
+    required String restaurantId,
+    required String date,
+  }) async {
+    return _appApiClient.request(
+      method: RestMethod.get,
+      path: '/api/v1/restaurants/$restaurantId/dashboard/daily',
+      queryParameters: {
+        'date': date,
+      },
+      fromJson: DailyDashboardModel.fromJson,
+    );
+  }
 }

@@ -17,6 +17,11 @@ import '../data/auth/auth_token_manager.dart' as _i702;
 import '../data/network/api_service.dart' as _i589;
 import '../data/network/app_api_client.dart' as _i133;
 import '../data/network/auth_interceptor.dart' as _i803;
+import '../data/repositories/auth_repository_impl.dart' as _i74;
+import '../data/repositories/dashboard_repository_impl.dart' as _i585;
+import '../domain/repositories/auth_repository.dart' as _i800;
+import '../domain/repositories/dashboard_repository.dart' as _i525;
+import '../domain/usecases/get_daily_dashboard_usecase.dart' as _i413;
 import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -48,6 +53,12 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.singleton<_i589.ApiService>(
         () => _i589.ApiService(gh<_i133.AppApiClient>()));
+    gh.factory<_i525.DashboardRepository>(
+        () => _i585.DashboardRepositoryImpl(gh<_i589.ApiService>()));
+    gh.lazySingleton<_i800.AuthRepository>(
+        () => _i74.AuthRepositoryImpl(gh<_i589.ApiService>()));
+    gh.factory<_i413.GetDailyDashboardUseCase>(
+        () => _i413.GetDailyDashboardUseCase(gh<_i525.DashboardRepository>()));
     return this;
   }
 }
