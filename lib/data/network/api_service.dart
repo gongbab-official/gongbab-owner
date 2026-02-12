@@ -1,11 +1,17 @@
-
 import 'package:gongbab_owner/data/models/daily_dashboard_model.dart';
+
 import 'package:gongbab_owner/data/models/meal_log_model.dart';
+
+import 'package:gongbab_owner/data/models/monthly_settlement_model.dart';
+
 import 'package:gongbab_owner/data/network/rest_api_client.dart';
+
 import 'package:injectable/injectable.dart';
 
 import '../../domain/utils/result.dart';
+
 import '../models/auth/login_model.dart';
+
 import 'app_api_client.dart';
 
 @singleton
@@ -15,6 +21,7 @@ class ApiService {
   ApiService(this._appApiClient);
 
   // ------------auth---------------------
+
   Future<Result<LoginModel>> login({
     required String code,
     required String deviceType,
@@ -31,9 +38,11 @@ class ApiService {
       fromJson: LoginModel.fromJson,
     );
   }
+
   // ------------------------------------
 
   // ------------dashboard---------------------
+
   Future<Result<DailyDashboardModel>> getDailyDashboard({
     required String restaurantId,
     required String date,
@@ -49,6 +58,7 @@ class ApiService {
   }
 
   // ------------meal-logs---------------------
+
   Future<Result<MealLogModel>> getMealLogs({
     required String restaurantId,
     required String companyId,
@@ -69,6 +79,22 @@ class ApiService {
         'pageSize': pageSize,
       },
       fromJson: MealLogModel.fromJson,
+    );
+  }
+
+  // ------------settlements---------------------
+
+  Future<Result<MonthlySettlementModel>> getMonthlySettlement({
+    required String restaurantId,
+    required String month,
+  }) async {
+    return _appApiClient.request(
+      method: RestMethod.get,
+      path: '/api/v1/restaurants/$restaurantId/settlements/monthly',
+      queryParameters: {
+        'month': month,
+      },
+      fromJson: MonthlySettlementModel.fromJson,
     );
   }
 }

@@ -20,11 +20,14 @@ import '../data/network/auth_interceptor.dart' as _i803;
 import '../data/repositories/auth_repository_impl.dart' as _i74;
 import '../data/repositories/dashboard_repository_impl.dart' as _i585;
 import '../data/repositories/meal_log_repository_impl.dart' as _i516;
+import '../data/repositories/settlement_repository_impl.dart' as _i916;
 import '../domain/repositories/auth_repository.dart' as _i800;
 import '../domain/repositories/dashboard_repository.dart' as _i525;
 import '../domain/repositories/meal_log_repository.dart' as _i637;
+import '../domain/repositories/settlement_repository.dart' as _i85;
 import '../domain/usecases/get_daily_dashboard_usecase.dart' as _i413;
 import '../domain/usecases/get_meal_logs_usecase.dart' as _i865;
+import '../domain/usecases/get_monthly_settlement_usecase.dart' as _i351;
 import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -60,12 +63,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i516.MealLogRepositoryImpl(gh<_i589.ApiService>()));
     gh.factory<_i525.DashboardRepository>(
         () => _i585.DashboardRepositoryImpl(gh<_i589.ApiService>()));
+    gh.factory<_i85.SettlementRepository>(
+        () => _i916.SettlementRepositoryImpl(gh<_i589.ApiService>()));
     gh.factory<_i865.GetMealLogsUseCase>(
         () => _i865.GetMealLogsUseCase(gh<_i637.MealLogRepository>()));
     gh.lazySingleton<_i800.AuthRepository>(
         () => _i74.AuthRepositoryImpl(gh<_i589.ApiService>()));
     gh.factory<_i413.GetDailyDashboardUseCase>(
         () => _i413.GetDailyDashboardUseCase(gh<_i525.DashboardRepository>()));
+    gh.factory<_i351.GetMonthlySettlementUseCase>(() =>
+        _i351.GetMonthlySettlementUseCase(gh<_i85.SettlementRepository>()));
     return this;
   }
 }
