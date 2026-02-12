@@ -1,5 +1,6 @@
 
 import 'package:gongbab_owner/data/models/daily_dashboard_model.dart';
+import 'package:gongbab_owner/data/models/meal_log_model.dart';
 import 'package:gongbab_owner/data/network/rest_api_client.dart';
 import 'package:injectable/injectable.dart';
 
@@ -44,6 +45,30 @@ class ApiService {
         'date': date,
       },
       fromJson: DailyDashboardModel.fromJson,
+    );
+  }
+
+  // ------------meal-logs---------------------
+  Future<Result<MealLogModel>> getMealLogs({
+    required String restaurantId,
+    required String companyId,
+    required String date,
+    required String mealType,
+    String? q,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    return _appApiClient.request(
+      method: RestMethod.get,
+      path: '/api/v1/restaurants/$restaurantId/companies/$companyId/meal-logs',
+      queryParameters: {
+        'date': date,
+        'mealType': mealType,
+        'q': q,
+        'page': page,
+        'pageSize': pageSize,
+      },
+      fromJson: MealLogModel.fromJson,
     );
   }
 }
