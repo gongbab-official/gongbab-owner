@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:gongbab_owner/data/auth/auth_token_manager.dart';
+import 'package:gongbab_owner/data/models/auth/login_model.dart';
 import 'package:injectable/injectable.dart';
-
-import '../auth/auth_token_manager.dart';
-import '../models/auth/login_model.dart';
 
 @injectable
 class AuthInterceptor extends Interceptor {
@@ -13,9 +12,9 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) {
+      RequestOptions options,
+      RequestInterceptorHandler handler,
+      ) {
     final accessToken = _authTokenManager.getAccessToken();
     if (accessToken != null && !options.path.contains('/auth/refresh')) {
       options.headers['Authorization'] = 'Bearer $accessToken';
