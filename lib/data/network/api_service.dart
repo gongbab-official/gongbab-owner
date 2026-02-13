@@ -39,7 +39,7 @@ class ApiService {
 
   // ------------dashboard---------------------
   Future<Result<DailyDashboardModel>> getDailyDashboard({
-    required String restaurantId,
+    required int restaurantId,
     required String date,
   }) async {
     return _appApiClient.request(

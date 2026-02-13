@@ -10,7 +10,7 @@ class GetDailyDashboardUseCase {
   GetDailyDashboardUseCase(this._dashboardRepository);
 
   Future<Result<DailyDashboard>> execute({
-    required String restaurantId,
+    required int restaurantId,
     required String date,
   }) {
     return _dashboardRepository.getDailyDashboard(

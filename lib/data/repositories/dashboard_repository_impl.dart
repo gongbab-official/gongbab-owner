@@ -12,7 +12,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
 
   @override
   Future<Result<DailyDashboard>> getDailyDashboard({
-    required String restaurantId,
+    required int restaurantId,
     required String date,
   }) async {
     final result = await _apiService.getDailyDashboard(

@@ -3,7 +3,7 @@ import 'package:gongbab_owner/domain/utils/result.dart';
 
 abstract class DashboardRepository {
   Future<Result<DailyDashboard>> getDailyDashboard({
-    required String restaurantId,
+    required int restaurantId,
     required String date,
   });
 }
