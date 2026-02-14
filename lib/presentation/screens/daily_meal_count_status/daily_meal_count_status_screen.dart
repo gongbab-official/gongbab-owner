@@ -72,6 +72,7 @@ class _DailyMealCountStatusScreenState
     context.push(
       AppRoutes.companyMealDetail,
       extra: {
+        'companyId': company.companyId,
         'companyName': company.companyName,
         'selectedDate': selectedDate,
       },
@@ -238,10 +239,13 @@ class _DailyMealCountStatusScreenState
 
   Widget _buildCompanyList(List<DailyDashboardCompany> companies) {
     if (companies.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           '아직 식사를 한 업체가 없습니다.',
-          style: TextStyle(color: Colors.white70, fontSize: 16),
+          style: TextStyle(
+            color: Colors.white70,
+            fontSize: 20.sp,
+          ),
         ),
       );
     }
