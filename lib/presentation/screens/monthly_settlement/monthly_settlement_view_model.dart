@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gongbab_owner/data/auth/auth_token_manager.dart';
 import 'package:gongbab_owner/domain/entities/settlement/monthly_settlement.dart';
@@ -78,20 +79,18 @@ class MonthlySettlementViewModel extends ChangeNotifier {
     MonthlySettlement? currentSettlement;
     if (_uiState is Success) {
       currentSettlement = (_uiState as Success).monthlySettlement;
-      _uiState = Exporting(currentSettlement!); // Keep current data during export
+      _uiState = Exporting(currentSettlement);
     } else if (_uiState is ExportSuccess) {
       currentSettlement = (_uiState as ExportSuccess).monthlySettlement;
-      _uiState = Exporting(currentSettlement!);
+      _uiState = Exporting(currentSettlement);
     } else if (_uiState is ExportError) {
       currentSettlement = (_uiState as ExportError).monthlySettlement;
-      _uiState = Exporting(currentSettlement!);
+      _uiState = Exporting(currentSettlement);
     } else {
-      // If not in a state with settlement data, load it first or show error
       _uiState = Error('No settlement data available to export. Please load it first.');
       notifyListeners();
       return;
     }
-
     notifyListeners();
 
     final String? restaurantId = _authTokenManager.getRestaurantId()?.toString();
@@ -108,10 +107,18 @@ class MonthlySettlementViewModel extends ChangeNotifier {
     );
 
     result.when(
-      success: (data) {
-        // Here you would typically save the Uint8List data to a file
-        // For now, we just indicate success.
-        _uiState = ExportSuccess('Export successful!', currentSettlement!);
+      success: (data) async {
+        try {
+          final String fileName = 'settlement_$month.xlsx';
+          final path = await FileSaver.instance.saveFile(
+            name: fileName,
+            bytes: data,
+            mimeType: MimeType.microsoftExcel,
+          );
+          _uiState = ExportSuccess('파일이 성공적으로 저장되었습니다.\n경로: $path', currentSettlement!);
+        } catch (e) {
+          _uiState = ExportError('파일 저장에 실패했습니다: ${e.toString()}', currentSettlement!);
+        }
         notifyListeners();
       },
       failure: (success, error) {
