@@ -18,6 +18,7 @@ class AppRouter {
   AppRouter(this._authTokenManager) {
     router = GoRouter(
       initialLocation: AppRoutes.login,
+      refreshListenable: _authTokenManager,
       routes: <RouteBase>[
         GoRoute(
           path: AppRoutes.login,
