@@ -18,7 +18,7 @@ class DatePickerDialog extends StatefulWidget {
 class _DatePickerDialogState extends State<DatePickerDialog> {
   late DateTime currentMonth;
   DateTime? selectedDate;
-  final DateTime today = DateTime.now();
+  final DateTime today = DateTime.now(); // Store DateTime.now() once
 
   @override
   void initState() {
@@ -60,18 +60,17 @@ class _DatePickerDialogState extends State<DatePickerDialog> {
     final firstDayOfMonth = DateTime(currentMonth.year, currentMonth.month, 1);
     final lastDayOfMonth = DateTime(currentMonth.year, currentMonth.month + 1, 0);
 
-    final daysInMonth = lastDayOfMonth.day;
-    final firstWeekday = firstDayOfMonth.weekday;
-
     List<DateTime> days = [];
 
     // Add empty days for alignment (Monday is 1, Sunday is 7)
-    for (int i = 1; i < firstWeekday; i++) {
+    // Adjust to start from Sunday (1) for display (Flutter's weekday starts with Monday=1, Sunday=7)
+    final int firstWeekdayAdjusted = (firstDayOfMonth.weekday == 7) ? 0 : firstDayOfMonth.weekday; // Make Sunday 0
+    for (int i = 0; i < firstWeekdayAdjusted; i++) {
       days.add(DateTime(0)); // Placeholder
     }
 
     // Add actual days
-    for (int i = 1; i <= daysInMonth; i++) {
+    for (int i = 1; i <= lastDayOfMonth.day; i++) {
       days.add(DateTime(currentMonth.year, currentMonth.month, i));
     }
 
@@ -163,14 +162,14 @@ class _DatePickerDialogState extends State<DatePickerDialog> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // Next month button
+                  // Next month button - disabled if currentMonth is today's month or after
                   GestureDetector(
-                    onTap: _nextMonth,
+                    onTap: currentMonth.isBefore(DateTime(today.year, today.month)) ? _nextMonth : null,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.chevron_right,
-                        color: Colors.white,
+                        color: currentMonth.isBefore(DateTime(today.year, today.month)) ? Colors.white : Colors.white.withOpacity(0.3),
                         size: 28.sp,
                       ),
                     ),
@@ -290,7 +289,7 @@ class _DatePickerDialogState extends State<DatePickerDialog> {
       itemBuilder: (context, index) {
         final date = days[index];
 
-        // Empty cell
+        // Empty cell (placeholder dates)
         if (date.year == 0) {
           return const SizedBox.shrink();
         }
@@ -298,26 +297,32 @@ class _DatePickerDialogState extends State<DatePickerDialog> {
         final isSelected = _isSameDay(date, selectedDate);
         final isToday = _isSameDay(date, today);
 
+        // Determine if the date is selectable (today or in the past)
+        final bool isSelectable = !date.isAfter(today);
+
         return GestureDetector(
-          onTap: () => _onDateTap(date),
+          onTap: isSelectable ? () => _onDateTap(date) : null,
           child: Container(
             decoration: BoxDecoration(
               color: isSelected
                   ? const Color(0xFF3B82F6)
-                  : Colors.transparent,
+                  : (isSelectable ? Colors.transparent : Colors.grey.withOpacity(0.1)),
               border: isToday && !isSelected
                   ? Border.all(
                 color: const Color(0xFF3B82F6),
                 width: 2.w,
               )
-                  : null,
+                  : (isSelectable ? Border.all( // Apply border only if selectable and not today
+                color: const Color(0xFF2D3748),
+                width: 1.w,
+              ) : null), // No border for unselectable dates
               borderRadius: BorderRadius.circular(12.r),
             ),
             alignment: Alignment.center,
             child: Text(
               '${date.day}',
               style: TextStyle(
-                color: Colors.white,
+                color: isSelectable ? Colors.white : Colors.white.withOpacity(0.3),
                 fontSize: 16.sp,
                 fontWeight: isSelected || isToday
                     ? FontWeight.bold

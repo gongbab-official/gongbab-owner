@@ -18,11 +18,12 @@ class MonthPickerDialog extends StatefulWidget {
 class _MonthPickerDialogState extends State<MonthPickerDialog> {
   late int currentYear;
   int? selectedMonth;
+  final DateTime _now = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    final initial = widget.initialDate ?? DateTime.now();
+    final initial = widget.initialDate ?? _now;
     currentYear = initial.year;
     selectedMonth = initial.month;
   }
@@ -136,14 +137,14 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // Next year button
+                  // Next year button - disabled if currentYear is _now.year
                   GestureDetector(
-                    onTap: _nextYear,
+                    onTap: currentYear < _now.year ? _nextYear : null,
                     child: Container(
                       padding: EdgeInsets.all(8.w),
                       child: Icon(
                         Icons.chevron_right,
-                        color: Colors.white,
+                        color: currentYear < _now.year ? Colors.white : Colors.white.withOpacity(0.3),
                         size: 28.sp,
                       ),
                     ),
@@ -231,23 +232,24 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
       itemBuilder: (context, index) {
         final month = index + 1;
         final isSelected = selectedMonth == month;
-        final isCurrentMonth = currentYear == DateTime.now().year &&
-            month == DateTime.now().month;
+        
+        final bool isSelectable = (currentYear < _now.year) ||
+                                  (currentYear == _now.year && month <= _now.month);
 
         return GestureDetector(
-          onTap: () => _onMonthTap(month),
+          onTap: isSelectable ? () => _onMonthTap(month) : null,
           child: Container(
             decoration: BoxDecoration(
               color: isSelected
                   ? const Color(0xFF3B82F6)
-                  : Colors.transparent,
-              border: isCurrentMonth && !isSelected
+                  : (isSelectable ? Colors.transparent : Colors.grey.withOpacity(0.1)),
+              border: (currentYear == _now.year && month == _now.month && !isSelected)
                   ? Border.all(
                 color: const Color(0xFF3B82F6),
                 width: 2.w,
               )
                   : Border.all(
-                color: const Color(0xFF2D3748),
+                color: isSelectable ? const Color(0xFF2D3748) : Colors.transparent, // Border for unselectable
                 width: 1.w,
               ),
               borderRadius: BorderRadius.circular(12.r),
@@ -256,9 +258,9 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
             child: Text(
               '$month월',
               style: TextStyle(
-                color: Colors.white,
+                color: isSelectable ? Colors.white : Colors.white.withOpacity(0.3),
                 fontSize: 16.sp,
-                fontWeight: isSelected || isCurrentMonth
+                fontWeight: isSelected || (currentYear == _now.year && month == _now.month)
                     ? FontWeight.bold
                     : FontWeight.normal,
               ),
