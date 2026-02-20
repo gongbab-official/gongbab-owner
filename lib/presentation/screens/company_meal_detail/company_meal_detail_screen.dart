@@ -233,7 +233,7 @@ class _CompanyMealDetailScreenState extends State<CompanyMealDetailScreen> {
           onPressed: () => context.pop(),
         ),
       title: Text(
-        '식수 상세 내역',
+        '식사 상세 내역',
         style: TextStyle(
           color: Colors.white,
           fontSize: 20.sp,
