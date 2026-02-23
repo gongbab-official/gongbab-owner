@@ -96,6 +96,7 @@ class CompanyMealDetailViewModel extends ChangeNotifier {
             date: newMealLog.date,
             company: newMealLog.company,
             totalCount: newMealLog.totalCount,
+            byMealType: newMealLog.byMealType,
             items: allItems,
           );
           _uiState = Success(updatedMealLog, isLoadingMore: false);

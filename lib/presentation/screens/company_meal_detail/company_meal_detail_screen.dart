@@ -13,11 +13,11 @@ enum MealType { all, breakfast, lunch, dinner }
 extension MealLogItemUIHelpers on MealLogItem {
   MealType get mealTypeEnum {
     switch (mealType) {
-      case 'BREAKFAST':
+      case 'breakfast':
         return MealType.breakfast;
-      case 'LUNCH':
+      case 'lunch':
         return MealType.lunch;
-      case 'DINNER':
+      case 'dinner':
         return MealType.dinner;
       default:
         return MealType.all;
@@ -26,11 +26,11 @@ extension MealLogItemUIHelpers on MealLogItem {
 
   IconData getMealTypeIcon() {
     switch (mealType) {
-      case 'BREAKFAST':
+      case 'breakfast':
         return Icons.wb_sunny_outlined;
-      case 'LUNCH':
+      case 'lunch':
         return Icons.wb_sunny;
-      case 'DINNER':
+      case 'dinner':
         return Icons.nightlight_round;
       default:
         return Icons.restaurant;
@@ -39,11 +39,11 @@ extension MealLogItemUIHelpers on MealLogItem {
 
   Color getMealTypeColor() {
     switch (mealType) {
-      case 'BREAKFAST':
+      case 'breakfast':
         return const Color(0xFFFF9800);
-      case 'LUNCH':
+      case 'lunch':
         return const Color(0xFFFFC107);
-      case 'DINNER':
+      case 'dinner':
         return const Color(0xFF7C3AED);
       default:
         return const Color(0xFF3B82F6);
@@ -52,11 +52,11 @@ extension MealLogItemUIHelpers on MealLogItem {
 
   String getMealTypeLabel() {
     switch (mealType) {
-      case 'BREAKFAST':
+      case 'breakfast':
         return 'BREAKFAST LOGGED';
-      case 'LUNCH':
+      case 'lunch':
         return 'LUNCH LOGGED';
-      case 'DINNER':
+      case 'dinner':
         return 'DINNER LOGGED';
       default:
         return 'MEAL LOGGED';
@@ -148,21 +148,21 @@ class _CompanyMealDetailScreenState extends State<CompanyMealDetailScreen> {
   int get breakfastCount {
     final state = _viewModel.uiState;
     if (state is Success) {
-      return state.mealLog.items.where((r) => r.mealType == 'BREAKFAST').length;
+      return state.mealLog.byMealType.additionalProp1;
     }
     return 0;
   }
   int get lunchCount {
     final state = _viewModel.uiState;
     if (state is Success) {
-      return state.mealLog.items.where((r) => r.mealType == 'LUNCH').length;
+      return state.mealLog.byMealType.additionalProp2;
     }
     return 0;
   }
   int get dinnerCount {
     final state = _viewModel.uiState;
     if (state is Success) {
-      return state.mealLog.items.where((r) => r.mealType == 'DINNER').length;
+      return state.mealLog.byMealType.additionalProp3;
     }
     return 0;
   }

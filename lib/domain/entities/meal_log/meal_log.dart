@@ -1,3 +1,5 @@
+import '../dashboard/daily_dashboard.dart';
+
 class MealLogCompany {
   final int id;
   final String name;
@@ -26,12 +28,14 @@ class MealLog {
   final String date;
   final MealLogCompany company;
   final int totalCount;
+  final DailyDashboardByMealType byMealType;
   final List<MealLogItem> items;
 
   MealLog({
     required this.date,
     required this.company,
     required this.totalCount,
+    required this.byMealType,
     required this.items,
   });
 }

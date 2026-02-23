@@ -40,6 +40,8 @@ MealLogModel _$MealLogModelFromJson(Map<String, dynamic> json) => MealLogModel(
       company:
           MealLogCompanyModel.fromJson(json['company'] as Map<String, dynamic>),
       totalCount: (json['totalCount'] as num).toInt(),
+      byMealType: DailyDashboardByMealTypeModel.fromJson(
+          json['byMealType'] as Map<String, dynamic>),
       items: (json['items'] as List<dynamic>)
           .map((e) => MealLogItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -50,5 +52,6 @@ Map<String, dynamic> _$MealLogModelToJson(MealLogModel instance) =>
       'date': instance.date,
       'company': instance.company,
       'totalCount': instance.totalCount,
+      'byMealType': instance.byMealType,
       'items': instance.items,
     };

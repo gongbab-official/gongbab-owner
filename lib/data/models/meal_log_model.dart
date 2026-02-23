@@ -1,6 +1,8 @@
 import 'package:gongbab_owner/domain/entities/meal_log/meal_log.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'daily_dashboard_model.dart';
+
 part 'meal_log_model.g.dart';
 
 @JsonSerializable()
@@ -60,12 +62,14 @@ class MealLogModel {
   final String date;
   final MealLogCompanyModel company;
   final int totalCount;
+  final DailyDashboardByMealTypeModel byMealType;
   final List<MealLogItemModel> items;
 
   MealLogModel({
     required this.date,
     required this.company,
     required this.totalCount,
+    required this.byMealType,
     required this.items,
   });
 
@@ -79,6 +83,7 @@ class MealLogModel {
       date: date,
       company: company.toDomain(),
       totalCount: totalCount,
+      byMealType: byMealType.toDomain(),
       items: items.map((e) => e.toDomain()).toList(),
     );
   }

@@ -25,17 +25,17 @@ Map<String, dynamic> _$DailyDashboardCompanyModelToJson(
 DailyDashboardByMealTypeModel _$DailyDashboardByMealTypeModelFromJson(
         Map<String, dynamic> json) =>
     DailyDashboardByMealTypeModel(
-      additionalProp1: (json['BREAKFAST'] as num).toInt(),
-      additionalProp2: (json['LUNCH'] as num).toInt(),
-      additionalProp3: (json['DINNER'] as num).toInt(),
+      additionalProp1: (json['breakfast'] as num).toInt(),
+      additionalProp2: (json['lunch'] as num).toInt(),
+      additionalProp3: (json['dinner'] as num).toInt(),
     );
 
 Map<String, dynamic> _$DailyDashboardByMealTypeModelToJson(
         DailyDashboardByMealTypeModel instance) =>
     <String, dynamic>{
-      'BREAKFAST': instance.additionalProp1,
-      'LUNCH': instance.additionalProp2,
-      'DINNER': instance.additionalProp3,
+      'breakfast': instance.additionalProp1,
+      'lunch': instance.additionalProp2,
+      'dinner': instance.additionalProp3,
     };
 
 DailyDashboardModel _$DailyDashboardModelFromJson(Map<String, dynamic> json) =>
