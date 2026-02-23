@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp.router(
           routerConfig: router,
-          title: 'Gongbab Owner',
+          title: '공밥사장님용',
           theme: ThemeData(
             brightness: Brightness.dark,
             primaryColor: const Color(0xFF1a1f2e),
