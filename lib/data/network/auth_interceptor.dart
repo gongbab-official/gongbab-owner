@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:gongbab_owner/data/auth/auth_token_manager.dart';
 import 'package:gongbab_owner/data/models/auth/login_model.dart';
 import 'package:injectable/injectable.dart';
+import 'package:logger/logger.dart';
 
 @injectable
 class AuthInterceptor extends QueuedInterceptor {
@@ -36,17 +37,17 @@ class AuthInterceptor extends QueuedInterceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
+    // Check if the error is a 401 Unauthorized error
     if (err.response?.statusCode != 401) {
       return handler.next(err);
     }
 
-    // If the error is from the refresh token endpoint itself, it means the refresh token is invalid.
-    // In this case, we clear tokens and propagate the error. The router will handle redirection.
+    // If the failed request was the token refresh itself, clear tokens and log out.
     if (err.requestOptions.path.contains('/auth/refresh')) {
       await _authTokenManager.clearTokens();
       return handler.next(err);
     }
-    
+
     final refreshToken = _authTokenManager.getRefreshToken();
     if (refreshToken == null) {
       await _authTokenManager.clearTokens();
@@ -54,34 +55,29 @@ class AuthInterceptor extends QueuedInterceptor {
     }
 
     try {
-      // Attempt to refresh the token using the separate Dio instance.
       final response = await _tokenDio.post(
         '/api/v1/auth/refresh',
         data: {'refreshToken': refreshToken},
       );
 
+      Logger().d(
+          'uri:${response.realUri}\nstatusCode: ${response.statusCode}\ndata: ${response.data}');
       final loginModel = LoginModel.fromJson(response.data);
-
       await _authTokenManager.saveTokens(
         loginModel.accessToken,
         loginModel.refreshToken,
       );
 
-      // Token refreshed, now retry the original request that failed.
+      // Retry the original request with the new access token.
       final options = err.requestOptions;
       options.headers['Authorization'] = 'Bearer ${loginModel.accessToken}';
 
       final retryResponse = await _dio.fetch(options);
       return handler.resolve(retryResponse);
-
-    } on DioException catch (e) {
-      // If token refresh fails, clear tokens and reject the request.
+    } on DioException {
+      // If the refresh token is invalid, clear tokens and proceed with the error.
       await _authTokenManager.clearTokens();
-      return handler.reject(e);
-    } catch (e) {
-       // Handle any other unexpected errors during refresh.
-      await _authTokenManager.clearTokens();
-      return handler.reject(err);
+      return handler.next(err);
     }
   }
 }

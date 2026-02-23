@@ -69,13 +69,9 @@ class _DailyMealCountStatusScreenState
   }
 
   void _navigateToCompanyDetail(DailyDashboardCompany company) {
+    final dateString = selectedDate.toIso8601String().split('T').first;
     context.push(
-      AppRoutes.companyMealDetail,
-      extra: {
-        'companyId': company.companyId,
-        'companyName': company.companyName,
-        'selectedDate': selectedDate,
-      },
+      '/company_meal_detail/${company.companyId}/${company.companyName}/$dateString',
     );
   }
 
