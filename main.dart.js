@@ -87376,7 +87376,7 @@ M(a){var s=$.ayD().$1$0(t.KD).b
 s===$&&A.a()
 return new A.D6(new A.ae1(s),!0,!0,B.Oo,null)}}
 A.ae1.prototype={
-$2(a,b){return new A.nO(this.a,"Gongbab Owner",A.ws(B.ak,null,"Pretendard",B.j6,B.j6,null),!1,null)},
+$2(a,b){return new A.nO(this.a,"\uacf5\ubc25\uc0ac\uc7a5\ub2d8\uc6a9",A.ws(B.ak,null,"Pretendard",B.j6,B.j6,null),!1,null)},
 $S:581}
 A.tM.prototype={
 a56(a){var s=this,r=null,q=A.c([A.Mv(new A.a1g(),"/login"),A.Mv(new A.a1h(),"/daily_meal_count_status"),A.Mv(new A.a1i(),"/company_meal_detail/:companyId/:companyName/:selectedDate"),A.Mv(new A.a1j(),"/monthly_settlement")],t.yo)
