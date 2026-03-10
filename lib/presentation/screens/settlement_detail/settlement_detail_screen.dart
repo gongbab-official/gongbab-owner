@@ -39,48 +39,6 @@ class _SettlementDetailScreenState extends State<SettlementDetailScreen> {
   int get totalAmount =>
       companies.fold(0, (sum, company) => sum + company.totalAmount);
 
-  void _showMoreOptions() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF1A2332),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.edit, color: Colors.white),
-                title: Text(
-                  '정산 수정',
-                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  // TODO: Navigate to edit screen
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.delete, color: Colors.red),
-                title: Text(
-                  '정산 삭제',
-                  style: TextStyle(color: Colors.red, fontSize: 16.sp),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  // TODO: Show delete confirmation
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   void _copyText() {
     // TODO: Implement copy to clipboard
     ScaffoldMessenger.of(context).showSnackBar(
@@ -148,6 +106,7 @@ class _SettlementDetailScreenState extends State<SettlementDetailScreen> {
     return AppBar(
       backgroundColor: const Color(0xFF0F1419),
       elevation: 0,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => context.pop(),
@@ -161,16 +120,6 @@ class _SettlementDetailScreenState extends State<SettlementDetailScreen> {
         ),
       ),
       centerTitle: true,
-      actions: [
-        IconButton(
-          icon: Icon(
-            Icons.more_vert,
-            color: Colors.white,
-            size: 24.sp,
-          ),
-          onPressed: _showMoreOptions,
-        ),
-      ],
     );
   }
 

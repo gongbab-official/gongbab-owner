@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:gongbab_owner/presentation/router/app_router.dart';
+import 'package:gongbab_owner/presentation/screens/settlement_detail/settlement_detail_screen.dart';
 
 class SettlementManagementScreen extends StatefulWidget {
   const SettlementManagementScreen({Key? key}) : super(key: key);
@@ -41,14 +42,14 @@ class _SettlementManagementScreenState
   void _navigateToManagementDetail(MonthlySettlementSummary settlement) {
     // TODO: Navigate to management detail screen
 
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => MonthlySettlementScreen(
-    //       selectedMonth: DateTime(settlement.year, settlement.month),
-    //     ),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            SettlementDetailScreen(
+              year: settlement.year, month: settlement.month,),
+      ),
+    );
   }
 
   void _addNewSettlement() {
@@ -95,6 +96,7 @@ class _SettlementManagementScreenState
     return AppBar(
       backgroundColor: const Color(0xFF0F1419),
       elevation: 0,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => context.pop(),
