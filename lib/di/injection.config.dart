@@ -26,10 +26,14 @@ import '../domain/repositories/auth_repository.dart' as _i800;
 import '../domain/repositories/dashboard_repository.dart' as _i525;
 import '../domain/repositories/meal_log_repository.dart' as _i637;
 import '../domain/repositories/settlement_repository.dart' as _i85;
+import '../domain/usecases/confirm_settlement_usecase.dart' as _i1003;
+import '../domain/usecases/create_settlement_usecase.dart' as _i527;
 import '../domain/usecases/export_monthly_settlement_usecase.dart' as _i801;
 import '../domain/usecases/get_daily_dashboard_usecase.dart' as _i413;
 import '../domain/usecases/get_meal_logs_usecase.dart' as _i865;
 import '../domain/usecases/get_monthly_settlement_usecase.dart' as _i351;
+import '../domain/usecases/get_settlement_detail_usecase.dart' as _i38;
+import '../domain/usecases/get_settlements_usecase.dart' as _i694;
 import '../domain/usecases/login_usecase.dart' as _i634;
 import '../presentation/router/app_router.dart' as _i223;
 import '../presentation/screens/company_meal_detail/company_meal_detail_view_model.dart'
@@ -85,6 +89,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i74.AuthRepositoryImpl(gh<_i589.ApiService>()));
     gh.lazySingleton<_i351.GetMonthlySettlementUseCase>(() => registerModule
         .getMonthlySettlementUseCase(gh<_i85.SettlementRepository>()));
+    gh.lazySingleton<_i694.GetSettlementsUseCase>(() =>
+        registerModule.getSettlementsUseCase(gh<_i85.SettlementRepository>()));
+    gh.lazySingleton<_i527.CreateSettlementUseCase>(() => registerModule
+        .createSettlementUseCase(gh<_i85.SettlementRepository>()));
+    gh.lazySingleton<_i38.GetSettlementDetailUseCase>(() => registerModule
+        .getSettlementDetailUseCase(gh<_i85.SettlementRepository>()));
+    gh.lazySingleton<_i1003.ConfirmSettlementUseCase>(() => registerModule
+        .confirmSettlementUseCase(gh<_i85.SettlementRepository>()));
     gh.lazySingleton<_i801.ExportMonthlySettlementUseCase>(() => registerModule
         .exportMonthlySettlementUseCase(gh<_i85.SettlementRepository>()));
     gh.lazySingleton<_i634.LoginUseCase>(() => registerModule.loginUseCase(
