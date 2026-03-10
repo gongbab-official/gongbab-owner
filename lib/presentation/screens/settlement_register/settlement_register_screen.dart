@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class SettlementRegisterScreen extends StatefulWidget {
   const SettlementRegisterScreen({super.key});
@@ -48,9 +49,11 @@ class _SettlementRegisterScreenState extends State<SettlementRegisterScreen> {
     setState(() {
       applyUniformPrice = !applyUniformPrice;
       if (applyUniformPrice && uniformPriceController.text.isNotEmpty) {
-        final price = int.tryParse(uniformPriceController.text) ?? 0;
+        final priceString = uniformPriceController.text.replaceAll(',', '');
+        final price = int.tryParse(priceString) ?? 0;
+        final formattedPrice = NumberFormat('#,###').format(price);
         for (var row in rows) {
-          row.unitPriceController.text = price.toString();
+          row.unitPriceController.text = formattedPrice;
           row.calculateTotal();
         }
       }
@@ -59,9 +62,11 @@ class _SettlementRegisterScreenState extends State<SettlementRegisterScreen> {
 
   void _onUniformPriceValueChanged(String value) {
     if (applyUniformPrice) {
-      final price = int.tryParse(value) ?? 0;
+      final priceString = value.replaceAll(',', '');
+      final price = int.tryParse(priceString) ?? 0;
+      final formattedPrice = NumberFormat('#,###').format(price);
       for (var row in rows) {
-        row.unitPriceController.text = price.toString();
+        row.unitPriceController.text = formattedPrice;
         row.calculateTotal();
       }
       setState(() {});
@@ -164,6 +169,7 @@ class _SettlementRegisterScreenState extends State<SettlementRegisterScreen> {
     return AppBar(
       backgroundColor: const Color(0xFF0F1419),
       elevation: 0,
+      scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => context.pop(),
@@ -313,7 +319,10 @@ class _SettlementRegisterScreenState extends State<SettlementRegisterScreen> {
                 controller: uniformPriceController,
                 enabled: applyUniformPrice,
                 keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  CurrencyInputFormatter(),
+                ],
                 onChanged: _onUniformPriceValueChanged,
                 style: TextStyle(
                   color: Colors.white,
@@ -432,7 +441,10 @@ class _SettlementRegisterScreenState extends State<SettlementRegisterScreen> {
               controller: row.unitPriceController,
               enabled: !applyUniformPrice,
               keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                CurrencyInputFormatter(),
+              ],
               onChanged: (value) {
                 setState(() {
                   row.calculateTotal();
@@ -673,7 +685,8 @@ class SettlementRow {
 
   void calculateTotal() {
     final quantity = int.tryParse(quantityController.text) ?? 0;
-    final unitPrice = int.tryParse(unitPriceController.text) ?? 0;
+    final unitPriceString = unitPriceController.text.replaceAll(',', '');
+    final unitPrice = int.tryParse(unitPriceString) ?? 0;
     totalAmount = quantity * unitPrice;
   }
 
@@ -695,5 +708,27 @@ class SettlementRow {
     companyController.dispose();
     unitPriceController.dispose();
     quantityController.dispose();
+  }
+}
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
+
+    final int? value = int.tryParse(newValue.text.replaceAll(',', ''));
+    if (value == null) {
+      return oldValue;
+    }
+
+    final String formattedValue = NumberFormat('#,###').format(value);
+
+    return newValue.copyWith(
+      text: formattedValue,
+      selection: TextSelection.collapsed(offset: formattedValue.length),
+    );
   }
 }
