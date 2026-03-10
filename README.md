@@ -13,9 +13,9 @@
 
 ### 정산 관리 (Settlement Management)
 
-|                                               정산 팝업메뉴                                               |                                                정산 입력                                                 |                                                정산 목록                                                 |                                                정산 상세                                                 |
-|:---:|:---:|:---:|:---:|
-| <img src="screenshots/공밥오너_정산_팝업메뉴.png" width="200"> | <img src="screenshots/공밥오너_정산_입력.png" width="200"> | <img src="screenshots/공밥오너_정산_목록.png" width="200"> | <img src="screenshots/공밥오너_정산_상세.png" width="200"> |
+|                            정산 팝업메뉴                            |                            정산 입력                            |                             정산 목록                             |                           정산 상세                           |
+|:-------------------------------------------------------------:|:-----------------------------------------------------------:|:-------------------------------------------------------------:|:---------------------------------------------------------:|
+| <img src="screenshots/settlement_popup_menu.png" width="200"> | <img src="screenshots/settlement_register.png" width="200"> | <img src="screenshots/settlement_management.png" width="200"> | <img src="screenshots/settlement_detail.png" width="200"> |
 
 
 ## 주요 의존성 (Dependencies)
