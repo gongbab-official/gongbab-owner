@@ -8,8 +8,14 @@
 |:-------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
 | <img src="screenshots/simulator_screenshot_CB4D4082-215D-4CD5-8B7E-361D319DA829.png" width="200"> |         <img src="screenshots/simulator_screenshot_3440E207-CBB4-4083-A2E8-31DECEA62688.png" width="200">          | <img src="screenshots/simulator_screenshot_41E4884D-0021-4E77-8027-AF4EA5B2B3C1.png" width="200"> |
 |                                               월별정산                                                |                                                       다이얼로그                                                        |                                                상세                                                 |
-|                                               :---:                                               |                                                       :---:                                                        |                                               :---:                                               |
+|:---:|:---:|:---:|
 | <img src="screenshots/simulator_screenshot_6C3191BC-8396-4F9D-9633-0FF511E81773.png" width="200"> | <img src="screenshots/Simulator Screenshot - iPhone SE (3rd generation) - 2026-02-02 at 19.58.21.png" width="200"> |                                                                                                   |
+
+### 정산 관리 (Settlement Management)
+
+|                                               정산 팝업메뉴                                               |                                                정산 입력                                                 |                                                정산 목록                                                 |                                                정산 상세                                                 |
+|:---:|:---:|:---:|:---:|
+| <img src="screenshots/공밥오너_정산_팝업메뉴.png" width="200"> | <img src="screenshots/공밥오너_정산_입력.png" width="200"> | <img src="screenshots/공밥오너_정산_목록.png" width="200"> | <img src="screenshots/공밥오너_정산_상세.png" width="200"> |
 
 
 ## 주요 의존성 (Dependencies)
