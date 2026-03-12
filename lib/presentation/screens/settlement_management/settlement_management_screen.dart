@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:gongbab_owner/domain/entities/settlement/settlement.dart';
 import 'package:gongbab_owner/presentation/router/app_router.dart';
 import 'package:gongbab_owner/presentation/screens/settlement_detail/settlement_detail_screen.dart';
+import 'package:gongbab_owner/presentation/screens/settlement_management/settlement_management_event.dart';
+import 'package:gongbab_owner/presentation/screens/settlement_management/settlement_management_ui_state.dart';
+import 'package:gongbab_owner/presentation/screens/settlement_management/settlement_management_view_model.dart';
 
 class SettlementManagementScreen extends StatefulWidget {
   const SettlementManagementScreen({Key? key}) : super(key: key);
@@ -14,34 +19,16 @@ class SettlementManagementScreen extends StatefulWidget {
 
 class _SettlementManagementScreenState
     extends State<SettlementManagementScreen> {
-  // Sample data
-  final List<MonthlySettlementSummary> settlements = [
-    MonthlySettlementSummary(
-      year: 2026,
-      month: 2,
-      companyCount: 5,
-      totalAmount: 7685200,
-      isClosed: false,
-    ),
-    MonthlySettlementSummary(
-      year: 2026,
-      month: 1,
-      companyCount: 6,
-      totalAmount: 8240000,
-      isClosed: false,
-    ),
-    MonthlySettlementSummary(
-      year: 2025,
-      month: 12,
-      companyCount: 4,
-      totalAmount: 6120500,
-      isClosed: true,
-    ),
-  ];
+  late SettlementManagementViewModel _viewModel;
 
-  void _navigateToManagementDetail(MonthlySettlementSummary settlement) {
-    // TODO: Navigate to management detail screen
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = GetIt.instance<SettlementManagementViewModel>();
+    _viewModel.onEvent(const LoadSettlements());
+  }
 
+  void _navigateToDetail(Settlement settlement) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -53,7 +40,6 @@ class _SettlementManagementScreenState
   }
 
   void _addNewSettlement() {
-    // TODO: Navigate to create new settlement screen
     context.push(AppRoutes.settlementRegister);
   }
 
@@ -69,27 +55,77 @@ class _SettlementManagementScreenState
     return Scaffold(
       backgroundColor: const Color(0xFF0F1419),
       appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          // Header section
-          _buildHeader(),
+      body: ListenableBuilder(
+        listenable: _viewModel,
+        builder: (context, _) {
+          return Column(
+            children: [
+              // Header section
+              _buildHeader(),
 
-          // Settlement list
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
-              itemCount: settlements.length,
-              itemBuilder: (context, index) {
-                return _buildSettlementCard(settlements[index]);
-              },
-            ),
-          ),
+              // Settlement content
+              Expanded(
+                child: _buildContent(_viewModel.uiState),
+              ),
 
-          // Add new settlement button
-          _buildAddButton(),
-        ],
+              // Add new settlement button
+              _buildAddButton(),
+            ],
+          );
+        },
       ),
     );
+  }
+
+  Widget _buildContent(SettlementManagementUiState state) {
+    if (state is SettlementManagementLoading) {
+      return const Center(child: CircularProgressIndicator(color: Color(0xFF3B82F6)));
+    }
+
+    if (state is SettlementManagementError) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              state.message,
+              style: const TextStyle(color: Colors.white70),
+            ),
+            SizedBox(height: 16.h),
+            ElevatedButton(
+              onPressed: () => _viewModel.onEvent(const LoadSettlements()),
+              child: const Text('다시 시도'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state is SettlementManagementSuccess) {
+      final settlements = state.settlements;
+
+      if (settlements.isEmpty) {
+        return Center(
+          child: Text(
+            '정산 내역이 없습니다.',
+            style: TextStyle(
+              color: const Color(0xFF6B7280),
+              fontSize: 16.sp,
+            ),
+          ),
+        );
+      }
+
+      return ListView.builder(
+        padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 20.h),
+        itemCount: settlements.length,
+        itemBuilder: (context, index) {
+          return _buildSettlementCard(settlements[index]);
+        },
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -128,7 +164,7 @@ class _SettlementManagementScreenState
             ),
           ),
           Text(
-            '최근 12개월',
+            '최근 내역',
             style: TextStyle(
               color: const Color(0xFF6B7280),
               fontSize: 14.sp,
@@ -139,7 +175,9 @@ class _SettlementManagementScreenState
     );
   }
 
-  Widget _buildSettlementCard(MonthlySettlementSummary settlement) {
+  Widget _buildSettlementCard(Settlement settlement) {
+    final isConfirmed = settlement.status == 'CONFIRMED';
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(20.w),
@@ -179,44 +217,24 @@ class _SettlementManagementScreenState
                   ),
                 ],
               ),
-              if (settlement.isClosed)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2D3748),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    '마감됨',
-                    style: TextStyle(
-                      color: const Color(0xFF9CA3AF),
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              else
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF3B82F6),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    '정산완료',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 8.h,
+                ),
+                decoration: BoxDecoration(
+                  color: isConfirmed ? const Color(0xFF3B82F6) : const Color(0xFF2D3748),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  isConfirmed ? '확정됨' : '작성중',
+                  style: TextStyle(
+                    color: isConfirmed ? Colors.white : const Color(0xFF9CA3AF),
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
             ],
           ),
 
@@ -242,7 +260,7 @@ class _SettlementManagementScreenState
                 ),
               ),
               Text(
-                '기업 ${settlement.companyCount}개',
+                '기업 ${settlement.companyCount ?? 0}개',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.sp,
@@ -266,7 +284,7 @@ class _SettlementManagementScreenState
                 ),
               ),
               Text(
-                '${_formatCurrency(settlement.totalAmount)}원',
+                '${_formatCurrency(settlement.totalSupplyAmount)}원',
                 style: TextStyle(
                   color: const Color(0xFF3B82F6),
                   fontSize: 20.sp,
@@ -280,7 +298,7 @@ class _SettlementManagementScreenState
 
           // Detail button
           GestureDetector(
-            onTap: () => _navigateToManagementDetail(settlement),
+            onTap: () => _navigateToDetail(settlement),
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 14.h),
               decoration: BoxDecoration(
@@ -348,20 +366,4 @@ class _SettlementManagementScreenState
       ),
     );
   }
-}
-
-class MonthlySettlementSummary {
-  final int year;
-  final int month;
-  final int companyCount;
-  final int totalAmount;
-  final bool isClosed;
-
-  MonthlySettlementSummary({
-    required this.year,
-    required this.month,
-    required this.companyCount,
-    required this.totalAmount,
-    required this.isClosed,
-  });
 }
